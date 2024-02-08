@@ -1,16 +1,33 @@
 package com.rolandoselvera.testmvvmjava.views.activities.main;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
+import android.content.Intent;
 
 import com.rolandoselvera.testmvvmjava.R;
+import com.rolandoselvera.testmvvmjava.databinding.ActivityMainBinding;
+import com.rolandoselvera.testmvvmjava.views.activities.base.BaseActivity;
+import com.rolandoselvera.testmvvmjava.views.activities.downloadscreen.DownloadActivity;
+import com.rolandoselvera.testmvvmjava.views.activities.resultsscreen.ResultsActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected int getLayoutRes() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void initializeView() {
+
+    }
+
+    @Override
+    protected void initComponents() {
+        binding.buttonDownload.setOnClickListener(v -> {
+            startActivity(new Intent(this, DownloadActivity.class));
+        });
+
+        binding.buttonShowResults.setOnClickListener(v -> {
+            startActivity(new Intent(this, ResultsActivity.class));
+        });
     }
 }

@@ -13,6 +13,17 @@
         android:theme="@style/Base.Theme.TestMVVMJava"
         tools:targetApi="31">
         <activity
+            android:name=".views.activities.resultsscreen.ResultsActivity"
+            android:exported="false"
+            android:parentActivityName=".views.activities.main.MainActivity" />
+        <activity
+            android:name=".views.activities.downloadscreen.DownloadActivity"
+            android:exported="false"
+            android:parentActivityName=".views.activities.main.MainActivity" />
+        <activity
+            android:name=".views.activities.base.BaseActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.activities.splashscreen.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
