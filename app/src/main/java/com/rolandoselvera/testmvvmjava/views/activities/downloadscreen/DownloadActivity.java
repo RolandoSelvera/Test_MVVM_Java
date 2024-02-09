@@ -20,4 +20,9 @@ public class DownloadActivity extends BaseActivity<ActivityDownloadBinding> {
     protected void initComponents() {
 
     }
+
+    @Override
+    protected void initViewModel() {
+
+    }
 }

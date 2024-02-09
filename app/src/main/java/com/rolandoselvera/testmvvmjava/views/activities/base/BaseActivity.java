@@ -27,6 +27,8 @@ public abstract class BaseActivity<B extends ViewDataBinding> extends AppCompatA
 
     protected abstract void initComponents();
 
+    protected abstract void initViewModel();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,7 @@ public abstract class BaseActivity<B extends ViewDataBinding> extends AppCompatA
             binding = DataBindingUtil.setContentView(this, getLayoutRes());
         }
 
+        initViewModel();
         initializeView();
         initComponents();
     }
@@ -68,7 +71,7 @@ public abstract class BaseActivity<B extends ViewDataBinding> extends AppCompatA
         dialogProgress.show();
     }
 
-    protected void dismissProgress() {
+    protected void hideProgress() {
         if (null != dialogProgress && dialogProgress.isShowing()) {
             dialogProgress.cancel();
         }

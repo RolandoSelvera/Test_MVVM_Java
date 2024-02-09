@@ -9,6 +9,7 @@ public class SanitAbastecimiento {
     private String fechaCreacion;
     private String fechaModificacion;
     private String fechaEliminacion;
+    private String estatusAbastecimiento;
 
     public long getIDAbastecimiento() {
         return idAbastecimiento;
@@ -72,5 +73,13 @@ public class SanitAbastecimiento {
 
     public void setFechaEliminacion(String value) {
         this.fechaEliminacion = value;
+    }
+
+    public String getEstatusAbastecimiento() {
+        return estatusAbastecimiento;
+    }
+
+    public void setEstatusAbastecimiento(String estatusAbastecimiento) {
+        this.estatusAbastecimiento = estatusAbastecimiento;
     }
 }

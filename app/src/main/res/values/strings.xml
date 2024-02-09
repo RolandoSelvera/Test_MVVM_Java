@@ -3,4 +3,8 @@
     <string name="download">Descargar catálogos</string>
     <string name="results">Consultar</string>
     <string name="catalog">Catálogo</string>
+    <string name="nothing_here">Aún no hay productos, primero descargue el catálogo.</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="n_a">N/A</string>
 </resources>

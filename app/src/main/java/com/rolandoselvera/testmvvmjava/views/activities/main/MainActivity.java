@@ -30,4 +30,9 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
             startActivity(new Intent(this, ResultsActivity.class));
         });
     }
+
+    @Override
+    protected void initViewModel() {
+
+    }
 }
