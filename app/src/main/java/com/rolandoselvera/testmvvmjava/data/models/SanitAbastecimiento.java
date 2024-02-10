@@ -1,5 +1,7 @@
 package com.rolandoselvera.testmvvmjava.data.models;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -102,6 +104,10 @@ public class SanitAbastecimiento implements Serializable {
         return estatusAbastecimiento;
     }
 
+    private Bitmap imageBitmap;
+
+    private String currentImagePath;
+
     public void setEstatusAbastecimiento(String estatusAbastecimiento) {
         this.estatusAbastecimiento = estatusAbastecimiento;
     }
@@ -112,5 +118,21 @@ public class SanitAbastecimiento implements Serializable {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
+
+    public void setImageBitmap(Bitmap imageBitmap) {
+        this.imageBitmap = imageBitmap;
+    }
+
+    public String getCurrentImagePath() {
+        return currentImagePath;
+    }
+
+    public void setCurrentImagePath(String currentImagePath) {
+        this.currentImagePath = currentImagePath;
     }
 }

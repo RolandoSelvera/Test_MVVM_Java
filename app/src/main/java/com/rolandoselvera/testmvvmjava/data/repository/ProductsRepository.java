@@ -52,6 +52,7 @@ public class ProductsRepository {
                     values.put(DatabaseHelper.DATE_MODIFICATION, product.getFechaModificacion());
                     values.put(DatabaseHelper.DATE_DELETION, product.getFechaEliminacion());
                     values.put(DatabaseHelper.SUPPLYING_STATUS, product.getEstatusAbastecimiento());
+                    values.put(DatabaseHelper.IMG_PATH, product.getCurrentImagePath());
 
                     long rowId = database.insert(DatabaseHelper.TABLE_PRODUCTS, null, values);
                     if (rowId == -1) {
@@ -97,6 +98,7 @@ public class ProductsRepository {
                 product.setFechaModificacion(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DATE_MODIFICATION)));
                 product.setFechaEliminacion(cursor.getString(cursor.getColumnIndex(DatabaseHelper.DATE_DELETION)));
                 product.setEstatusAbastecimiento(cursor.getString(cursor.getColumnIndex(DatabaseHelper.SUPPLYING_STATUS)));
+                product.setCurrentImagePath(cursor.getString(cursor.getColumnIndex(DatabaseHelper.IMG_PATH)));
 
                 productsList.add(product);
             } while (cursor.moveToNext());
@@ -123,6 +125,26 @@ public class ProductsRepository {
             try {
                 ContentValues values = new ContentValues();
                 values.put(DatabaseHelper.SUPPLYING_STATUS, newStatus);
+
+                int rowsUpdated = database.update(
+                        DatabaseHelper.TABLE_PRODUCTS,
+                        values,
+                        DatabaseHelper.SUPPLYING_ID + " = ?",
+                        new String[]{String.valueOf(productId)}
+                );
+
+                emitter.onSuccess(rowsUpdated > 0);
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Single<Boolean> updateImagePath(long productId, String imagePath) {
+        return Single.create((SingleOnSubscribe<Boolean>) emitter -> {
+            try {
+                ContentValues values = new ContentValues();
+                values.put(DatabaseHelper.IMG_PATH, imagePath);
 
                 int rowsUpdated = database.update(
                         DatabaseHelper.TABLE_PRODUCTS,

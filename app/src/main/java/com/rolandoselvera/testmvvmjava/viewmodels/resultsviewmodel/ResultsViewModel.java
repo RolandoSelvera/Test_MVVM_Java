@@ -35,6 +35,12 @@ public class ResultsViewModel extends ViewModel {
         return hasUpdated;
     }
 
+    private MutableLiveData<Boolean> imageUpdated = new MutableLiveData<>();
+
+    public LiveData<Boolean> imageUpdated() {
+        return imageUpdated;
+    }
+
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public ResultsViewModel(ProductsRepository productsRepository) {
@@ -71,6 +77,25 @@ public class ResultsViewModel extends ViewModel {
                                 },
                                 throwable -> {
                                     hasUpdated.setValue(null);
+                                }
+                        )
+        );
+    }
+
+    public void updateImagePath(long productId, String imagePath) {
+        compositeDisposable.add(
+                productsRepository.updateImagePath(productId, imagePath)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                updateSuccess -> {
+                                    if (updateSuccess) {
+                                        imageUpdated.setValue(updateSuccess);
+                                    } else {
+                                        imageUpdated.setValue(false);
+                                    }
+                                },
+                                throwable -> {
+                                    imageUpdated.setValue(null);
                                 }
                         )
         );

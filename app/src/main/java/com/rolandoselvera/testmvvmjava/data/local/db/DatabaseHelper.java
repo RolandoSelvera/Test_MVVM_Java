@@ -20,6 +20,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATE_DELETION = "fechaEliminacion";
     public static final String SUPPLYING_STATUS = "estatusAbastecimiento";
 
+    public static final String IMG_PATH = "imagePath";
+
     public static synchronized DatabaseHelper getInstance(Context context) {
         if (instance == null) {
             instance = new DatabaseHelper(context.getApplicationContext());
@@ -37,7 +39,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     DATE_CREATION + " TEXT," +
                     DATE_MODIFICATION + " TEXT," +
                     DATE_DELETION + " TEXT," +
-                    SUPPLYING_STATUS + " TEXT" +
+                    SUPPLYING_STATUS + " TEXT," +
+                    IMG_PATH + " TEXT" +
                     ")";
 
     public DatabaseHelper(Context context) {

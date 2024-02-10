@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.rolandoselvera.testmvvmjava.R;
 import com.rolandoselvera.testmvvmjava.data.models.SanitAbastecimiento;
 import com.rolandoselvera.testmvvmjava.databinding.ItemProductBinding;
@@ -58,6 +59,16 @@ public class ProductsListAdapter extends ListAdapter<SanitAbastecimiento, Produc
 
         public void bind(SanitAbastecimiento sanitAbastecimiento) {
             binding.txtProduct.setText(sanitAbastecimiento.getTipoAbastecimiento());
+
+            if (sanitAbastecimiento.getCurrentImagePath() != null) {
+                Glide.with(context)
+                        .load(sanitAbastecimiento.getCurrentImagePath())
+                        .placeholder(R.drawable.ic_img_preview)
+                        .error(R.drawable.ic_img_preview)
+                        .into(binding.imgProduct);
+            } else {
+                binding.imgProduct.setImageResource(R.drawable.ic_img_preview);
+            }
 
             if (sanitAbastecimiento.getEstatusAbastecimiento() != null) {
                 switch (sanitAbastecimiento.getEstatusAbastecimiento().toLowerCase()) {

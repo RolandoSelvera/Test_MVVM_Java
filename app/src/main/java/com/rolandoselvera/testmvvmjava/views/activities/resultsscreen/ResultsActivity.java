@@ -1,5 +1,6 @@
 package com.rolandoselvera.testmvvmjava.views.activities.resultsscreen;
 
+import android.graphics.Bitmap;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -61,6 +62,14 @@ public class ResultsActivity extends BaseActivity<ActivityResultsBinding> implem
             }
         });
 
+        viewModel.imageUpdated().observe(this, response -> {
+            if (response) {
+                toast(getString(R.string.update_successful));
+            } else {
+                showAlert(getString(R.string.update_unsuccessful), "Intente de nuevo más tarde", this::onBackPressed);
+            }
+        });
+
         viewModel.loader().observe(this, isLoading -> {
             if (!isLoading) hideProgress();
         });
@@ -69,6 +78,7 @@ public class ResultsActivity extends BaseActivity<ActivityResultsBinding> implem
     private void setupRecyclerAdapter(List<SanitAbastecimiento> productsList) {
         binding.recyclerView.setVisibility(View.VISIBLE);
         adapter = new ProductsListAdapter(this, products -> {
+            checkCameraPermission();
             mProducts = products;
             adapter.notifyDataSetChanged();
         });
@@ -81,6 +91,22 @@ public class ResultsActivity extends BaseActivity<ActivityResultsBinding> implem
     public void onItemSelectionChanged(SanitAbastecimiento product, boolean isSelected) {
         if (isSelected) {
             viewModel.updateProductStatus(product.getIDAbastecimiento(), product.getEstatusAbastecimiento());
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handleImageBitmap(getmBitmap());
+        if (mProducts != null)
+            viewModel.updateImagePath(mProducts.getIDAbastecimiento(), getCurrentImagePath());
+    }
+
+    private void handleImageBitmap(Bitmap imageBitmap) {
+        if (mProducts != null) {
+            mProducts.setImageBitmap(imageBitmap);
+            mProducts.setCurrentImagePath(getCurrentImagePath());
+            adapter.notifyDataSetChanged();
         }
     }
 }
