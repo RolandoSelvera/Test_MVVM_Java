@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Test MVVM Java</string>
+    <string name="download">Descargar catálogos</string>
+    <string name="results">Consultar</string>
+    <string name="catalog">Catálogo</string>
+    <string name="nothing_here">Aún no hay productos, primero descargue el catálogo.</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="n_a">N/A</string>
+    <string name="download_successful">Descarga exitosa</string>
+    <string name="download_unsuccessful">Descarga fallida</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="deleted_successful">Limpiando Base de Datos…</string>
+    <string name="deleted_unsuccessful">Borrado fallido</string>
+    <string name="save_successful">¡Guardado correctamente!</string>
+    <string name="update_successful">¡Actualizado correctamente!</string>
+    <string name="update_unsuccessful">Actualización fallida</string>
 </resources>
