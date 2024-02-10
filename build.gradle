@@ -5,6 +5,8 @@ buildscript {
         lifecycleVersion = "2.7.0"
         liveDataVersion = "2.7.0"
         retrofitVersion = "2.9.0"
+        retrofitAdapterVersion = "2.9.0"
+        interceptorVersion = "4.7.2"
         glideVersion = "4.16.0"
         rxJavaVersion = "2.2.21"
         rxAndroidVersion = "2.1.1"

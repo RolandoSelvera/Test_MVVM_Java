@@ -13,8 +13,9 @@ import com.rolandoselvera.testmvvmjava.data.models.SanitAbastecimiento;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.SingleOnSubscribe;
 import io.reactivex.schedulers.Schedulers;
 
 public class ProductsRepository {
@@ -36,24 +37,41 @@ public class ProductsRepository {
         }
     }
 
-    public Completable insertProduct(SanitAbastecimiento product) {
-        return Completable.fromAction(() -> insertProductToDB(product))
-                .subscribeOn(Schedulers.io());
+    public Single<Boolean> insertProductsToDB(List<SanitAbastecimiento> productList) {
+        return Single.create((SingleOnSubscribe<Boolean>) emitter -> {
+            try {
+                database.beginTransaction();
+
+                for (SanitAbastecimiento product : productList) {
+                    ContentValues values = new ContentValues();
+                    values.put(DatabaseHelper.SUPPLYING_TYPE, product.getTipoAbastecimiento());
+                    values.put(DatabaseHelper.USER_CREATION, product.getUsuarioCreacion());
+                    values.put(DatabaseHelper.USER_MODIFICATION, product.getUsuarioModificacion());
+                    values.put(DatabaseHelper.USER_DELETION, product.getUsuarioEliminacion());
+                    values.put(DatabaseHelper.DATE_CREATION, product.getFechaCreacion());
+                    values.put(DatabaseHelper.DATE_MODIFICATION, product.getFechaModificacion());
+                    values.put(DatabaseHelper.DATE_DELETION, product.getFechaEliminacion());
+                    values.put(DatabaseHelper.SUPPLYING_STATUS, product.getEstatusAbastecimiento());
+
+                    long rowId = database.insert(DatabaseHelper.TABLE_PRODUCTS, null, values);
+                    if (rowId == -1) {
+                        emitter.onSuccess(false);
+                        return;
+                    }
+                }
+
+                database.setTransactionSuccessful();
+                emitter.onSuccess(true);
+
+            } catch (Exception e) {
+                emitter.onError(e);
+
+            } finally {
+                database.endTransaction();
+            }
+        }).subscribeOn(Schedulers.io());
     }
 
-    public void insertProductToDB(SanitAbastecimiento product) {
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.SUPPLYING_TYPE, product.getTipoAbastecimiento());
-        values.put(DatabaseHelper.USER_CREATION, product.getUsuarioCreacion());
-        values.put(DatabaseHelper.USER_MODIFICATION, product.getUsuarioModificacion());
-        values.put(DatabaseHelper.USER_DELETION, product.getUsuarioEliminacion());
-        values.put(DatabaseHelper.DATE_CREATION, product.getFechaCreacion());
-        values.put(DatabaseHelper.DATE_MODIFICATION, product.getFechaModificacion());
-        values.put(DatabaseHelper.DATE_DELETION, product.getFechaEliminacion());
-        values.put(DatabaseHelper.SUPPLYING_STATUS, product.getEstatusAbastecimiento());
-
-        database.insert(DatabaseHelper.TABLE_PRODUCTS, null, values);
-    }
 
     public Observable<List<SanitAbastecimiento>> getProducts() {
         return Observable.fromCallable(this::getProductsFromDB)
@@ -88,4 +106,36 @@ public class ProductsRepository {
 
         return productsList;
     }
+
+    public Single<Boolean> deleteAllProducts() {
+        return Single.create((SingleOnSubscribe<Boolean>) emitter -> {
+            try {
+                int rowsDeleted = database.delete(DatabaseHelper.TABLE_PRODUCTS, null, null);
+                emitter.onSuccess(rowsDeleted > 0);
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
+    public Single<Boolean> updateProductStatus(long productId, String newStatus) {
+        return Single.create((SingleOnSubscribe<Boolean>) emitter -> {
+            try {
+                ContentValues values = new ContentValues();
+                values.put(DatabaseHelper.SUPPLYING_STATUS, newStatus);
+
+                int rowsUpdated = database.update(
+                        DatabaseHelper.TABLE_PRODUCTS,
+                        values,
+                        DatabaseHelper.SUPPLYING_ID + " = ?",
+                        new String[]{String.valueOf(productId)}
+                );
+
+                emitter.onSuccess(rowsUpdated > 0);
+            } catch (Exception e) {
+                emitter.onError(e);
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
 }

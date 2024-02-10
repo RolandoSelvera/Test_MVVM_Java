@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.rolandoselvera.testmvvmjava.R;
 import com.rolandoselvera.testmvvmjava.data.models.SanitAbastecimiento;
 import com.rolandoselvera.testmvvmjava.databinding.ItemProductBinding;
 
@@ -16,6 +17,13 @@ public class ProductsListAdapter extends ListAdapter<SanitAbastecimiento, Produc
 
     private final Context context;
     private final OnItemClickedListener onItemClickedListener;
+
+    private OnItemSelectionChangedListener onItemSelectionChangedListener;
+
+    public void setOnItemSelectionChangedListener(OnItemSelectionChangedListener listener) {
+        this.onItemSelectionChangedListener = listener;
+    }
+
 
     public ProductsListAdapter(Context context, OnItemClickedListener onItemClickedListener) {
         super(DiffCallback);
@@ -39,7 +47,7 @@ public class ProductsListAdapter extends ListAdapter<SanitAbastecimiento, Produc
         holder.bind(current);
     }
 
-    static class ProductViewHolder extends RecyclerView.ViewHolder {
+    class ProductViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemProductBinding binding;
 
@@ -50,6 +58,50 @@ public class ProductsListAdapter extends ListAdapter<SanitAbastecimiento, Produc
 
         public void bind(SanitAbastecimiento sanitAbastecimiento) {
             binding.txtProduct.setText(sanitAbastecimiento.getTipoAbastecimiento());
+
+            if (sanitAbastecimiento.getEstatusAbastecimiento() != null) {
+                switch (sanitAbastecimiento.getEstatusAbastecimiento().toLowerCase()) {
+                    case "si":
+                        binding.radioBtnYes.setChecked(true);
+                        sanitAbastecimiento.setSelected(true);
+                        break;
+
+                    case "no":
+                        binding.radioBtnNo.setChecked(true);
+                        sanitAbastecimiento.setSelected(true);
+                        break;
+
+                    case "n/a":
+                        binding.radioBtnNA.setChecked(true);
+                        sanitAbastecimiento.setSelected(true);
+                        break;
+                }
+            }
+
+            binding.radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                boolean isChecked = checkedId == R.id.radioBtnYes;
+                boolean isCheckedNo = checkedId == R.id.radioBtnNo;
+                boolean isCheckedNA = checkedId == R.id.radioBtnNA;
+
+                if (isChecked) {
+                    sanitAbastecimiento.setSelected(true);
+                    sanitAbastecimiento.setEstatusAbastecimiento(binding.radioBtnYes.getText().toString());
+                }
+
+                if (isCheckedNo) {
+                    sanitAbastecimiento.setSelected(true);
+                    sanitAbastecimiento.setEstatusAbastecimiento(binding.radioBtnNo.getText().toString());
+                }
+
+                if (isCheckedNA) {
+                    sanitAbastecimiento.setSelected(true);
+                    sanitAbastecimiento.setEstatusAbastecimiento(binding.radioBtnNA.getText().toString());
+                }
+
+                if (onItemSelectionChangedListener != null) {
+                    onItemSelectionChangedListener.onItemSelectionChanged(sanitAbastecimiento, isChecked || isCheckedNo || isCheckedNA);
+                }
+            });
         }
     }
 
@@ -68,5 +120,8 @@ public class ProductsListAdapter extends ListAdapter<SanitAbastecimiento, Produc
     public interface OnItemClickedListener {
         void onItemClicked(SanitAbastecimiento sanitAbastecimiento);
     }
-}
 
+    public interface OnItemSelectionChangedListener {
+        void onItemSelectionChanged(SanitAbastecimiento sanitAbastecimiento, boolean isSelected);
+    }
+}

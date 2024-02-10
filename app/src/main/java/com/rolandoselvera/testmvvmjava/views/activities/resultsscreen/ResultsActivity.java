@@ -15,12 +15,14 @@ import com.rolandoselvera.testmvvmjava.views.adapters.ProductsListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResultsActivity extends BaseActivity<ActivityResultsBinding> {
+public class ResultsActivity extends BaseActivity<ActivityResultsBinding> implements ProductsListAdapter.OnItemSelectionChangedListener {
 
     private ProductsListAdapter adapter;
 
     private ResultsViewModelFactory factory;
     private ResultsViewModel viewModel;
+
+    private SanitAbastecimiento mProducts;
 
 
     @Override
@@ -51,6 +53,14 @@ public class ResultsActivity extends BaseActivity<ActivityResultsBinding> {
             }
         });
 
+        viewModel.hasUpdated().observe(this, response -> {
+            if (response) {
+                toast(getString(R.string.update_successful));
+            } else {
+                showAlert(getString(R.string.update_unsuccessful), "Intente de nuevo más tarde", this::onBackPressed);
+            }
+        });
+
         viewModel.loader().observe(this, isLoading -> {
             if (!isLoading) hideProgress();
         });
@@ -59,10 +69,18 @@ public class ResultsActivity extends BaseActivity<ActivityResultsBinding> {
     private void setupRecyclerAdapter(List<SanitAbastecimiento> productsList) {
         binding.recyclerView.setVisibility(View.VISIBLE);
         adapter = new ProductsListAdapter(this, products -> {
-            toast(products.getTipoAbastecimiento());
+            mProducts = products;
             adapter.notifyDataSetChanged();
         });
         binding.recyclerView.setAdapter(adapter);
         adapter.submitList(new ArrayList<>(productsList));
+        adapter.setOnItemSelectionChangedListener(this);
+    }
+
+    @Override
+    public void onItemSelectionChanged(SanitAbastecimiento product, boolean isSelected) {
+        if (isSelected) {
+            viewModel.updateProductStatus(product.getIDAbastecimiento(), product.getEstatusAbastecimiento());
+        }
     }
 }

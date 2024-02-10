@@ -1,6 +1,7 @@
 package com.rolandoselvera.testmvvmjava.views.activities.base;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -12,12 +13,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.rolandoselvera.testmvvmjava.R;
 import com.rolandoselvera.testmvvmjava.views.components.DialogScreenProgress;
 
 public abstract class BaseActivity<B extends ViewDataBinding> extends AppCompatActivity {
 
     protected B binding;
     private DialogScreenProgress dialogProgress;
+    private MaterialAlertDialogBuilder dialog;
     private ActionBar actionBar;
 
     @LayoutRes
@@ -35,6 +39,8 @@ public abstract class BaseActivity<B extends ViewDataBinding> extends AppCompatA
         if (getLayoutRes() != 0) {
             binding = DataBindingUtil.setContentView(this, getLayoutRes());
         }
+
+        dialog = new MaterialAlertDialogBuilder(this);
 
         initViewModel();
         initializeView();
@@ -74,6 +80,29 @@ public abstract class BaseActivity<B extends ViewDataBinding> extends AppCompatA
     protected void hideProgress() {
         if (null != dialogProgress && dialogProgress.isShowing()) {
             dialogProgress.cancel();
+        }
+    }
+
+    public void showAlert(String title, String message, Runnable onAccept) {
+        if (dialog != null) {
+            dialog.setTitle(title)
+                    .setMessage(message)
+                    .setCancelable(false)
+                    .setPositiveButton(BaseActivity.this.getString(R.string.accept), (dialogInterface, which) -> onAccept.run())
+                    .setOnDismissListener(DialogInterface::dismiss)
+                    .show();
+        }
+    }
+
+    public void showAlert(String title, String message, Runnable onAccept, Runnable onCancel) {
+        if (dialog != null) {
+            dialog.setTitle(title)
+                    .setMessage(message)
+                    .setCancelable(true)
+                    .setPositiveButton(getString(R.string.accept), (dialogInterface, which) -> onAccept.run())
+                    .setNegativeButton(getString(R.string.cancel), (dialogInterface, which) -> onCancel.run())
+                    .setOnDismissListener(DialogInterface::dismiss)
+                    .show();
         }
     }
 

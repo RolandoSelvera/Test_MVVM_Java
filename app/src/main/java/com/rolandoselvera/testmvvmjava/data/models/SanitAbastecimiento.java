@@ -1,15 +1,38 @@
 package com.rolandoselvera.testmvvmjava.data.models;
 
-public class SanitAbastecimiento {
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
+public class SanitAbastecimiento implements Serializable {
+
+    @SerializedName("idAbastecimiento")
     private long idAbastecimiento;
+
+    @SerializedName("tipoAbastecimiento")
     private String tipoAbastecimiento;
+
+    @SerializedName("usuarioCreacion")
     private String usuarioCreacion;
+
+    @SerializedName("usuarioModificacion")
     private String usuarioModificacion;
+
+    @SerializedName("usuarioEliminacion")
     private String usuarioEliminacion;
+
+    @SerializedName("fechaCreacion")
     private String fechaCreacion;
+
+    @SerializedName("fechaModificacion")
     private String fechaModificacion;
+
+    @SerializedName("fechaEliminacion")
     private String fechaEliminacion;
+
     private String estatusAbastecimiento;
+
+    private boolean isSelected;
 
     public long getIDAbastecimiento() {
         return idAbastecimiento;
@@ -81,5 +104,13 @@ public class SanitAbastecimiento {
 
     public void setEstatusAbastecimiento(String estatusAbastecimiento) {
         this.estatusAbastecimiento = estatusAbastecimiento;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

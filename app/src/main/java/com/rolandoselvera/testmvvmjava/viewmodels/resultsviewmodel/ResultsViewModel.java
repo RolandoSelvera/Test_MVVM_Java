@@ -29,6 +29,12 @@ public class ResultsViewModel extends ViewModel {
         return mLoader;
     }
 
+    private MutableLiveData<Boolean> hasUpdated = new MutableLiveData<>();
+
+    public LiveData<Boolean> hasUpdated() {
+        return hasUpdated;
+    }
+
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public ResultsViewModel(ProductsRepository productsRepository) {
@@ -50,6 +56,26 @@ public class ResultsViewModel extends ViewModel {
                     throwable.printStackTrace();
                 });
     }
+
+    public void updateProductStatus(long productId, String newStatus) {
+        compositeDisposable.add(
+                productsRepository.updateProductStatus(productId, newStatus)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                updateSuccess -> {
+                                    if (updateSuccess) {
+                                        hasUpdated.setValue(updateSuccess);
+                                    } else {
+                                        hasUpdated.setValue(false);
+                                    }
+                                },
+                                throwable -> {
+                                    hasUpdated.setValue(null);
+                                }
+                        )
+        );
+    }
+
 
     @Override
     protected void onCleared() {

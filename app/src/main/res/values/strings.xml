@@ -7,4 +7,13 @@
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="n_a">N/A</string>
+    <string name="download_successful">Descarga exitosa</string>
+    <string name="download_unsuccessful">Descarga fallida</string>
+    <string name="accept">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="deleted_successful">Limpiando Base de Datos…</string>
+    <string name="deleted_unsuccessful">Borrado fallido</string>
+    <string name="save_successful">¡Guardado correctamente!</string>
+    <string name="update_successful">¡Actualizado correctamente!</string>
+    <string name="update_unsuccessful">Actualización fallida</string>
 </resources>
